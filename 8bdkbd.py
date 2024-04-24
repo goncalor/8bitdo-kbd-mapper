@@ -4,6 +4,9 @@ import argparse
 import usb.core
 import usb.util
 
+VENDOR_ID = 0x2dc8
+PRODUCT_ID = 0x5200
+
 ATTN = [0x52, 0x76, 0xff]
 MAP = [0x52, 0xfa, 0x03, 0x0c, 0x00, 0xaa, 0x09, 0x71]
 MAP_DONE = [0x52, 0x76, 0xa5]
@@ -37,7 +40,7 @@ class EightBDKdb:
 
 
 def get_8bd_endpoints():
-    dev = usb.core.find(idVendor=0x2dc8, idProduct=0x5200)
+    dev = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
 
     if dev is None:
         raise ValueError("Could not find 8BitDo Retro Mechanical Keyboard")
