@@ -62,8 +62,8 @@ HWKEY = {
     "j": 0x0d,
     "k": 0x0e,
     "l": 0x0f,
-    ";": 0x33,
-    ",": 0x34,
+    "semicolon": 0x33,
+    "apostrophe": 0x34,
     "enter": 0x28,
     # bottom row
     "leftshift": 0x65,
@@ -74,28 +74,30 @@ HWKEY = {
     "b": 0x05,
     "n": 0x11,
     "m": 0x10,
-    ",": 0x36,
-    ".": 0x37,
-    "/": 0x38,
+    "comma": 0x36,
+    "dot": 0x37,
+    "slash": 0x38,
     "rightshift": 0x69,
     "up": 0x52,
     # spacebar row
     "leftctrl": 0x64,
-    "leftmeta": 0x67,
-    "windows": 0x67,  # Windows key
+    "windows": 0x67,
+    "leftmeta": 0x67,  # Windows key
     "leftalt": 0x66,
     "space": 0x2c,
     "rightalt": 0x6a,
     "superb": 0x6c,
-    "rightmeta": 0x6c,  # right meta
+    "rightmeta": 0x6c,  # super B
     "supera": 0x6d,
-    "menu": 0x6d,  # application
+    "menu": 0x6d,  # super A
     "rightctrl": 0x68,
     "left": 0x50,
     "down": 0x51,
     "right": 0x4f,
 }
 
+# HID Usages
+# https://www.usb.org/document-library/hid-usage-tables-15
 USAGE = {
     "none": (0x070000, "No key pressed"),
     #
