@@ -54,23 +54,25 @@ def get_8bd_endpoints():
     return endpoint_in, endpoint_out
 
 
-parser = argparse.ArgumentParser(
-    description="Key mapper for 8BitDo\'s Retro Mechanical Keyboard")
-subparsers = parser.add_subparsers()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Key mapper for 8BitDo\'s Retro Mechanical Keyboard")
+    subparsers = parser.add_subparsers()
 
-parser_map = subparsers.add_parser(
-    "list-keys", help="list the names of keys to be used in maps")
+    parser_map = subparsers.add_parser(
+        "list-keys", help="list the names of keys to be used in maps")
 
-#TODO: mutully exclude options
-parser_map = subparsers.add_parser("map",
-                                   help="map hardware keys to other keys")
-parser_map.add_argument("hadware_key", type=str)
-parser_map.add_argument("mapped_key", type=str)
-parser_map.add_argument("--hid",
-                        type=str,
-                        help="an hex string corresponding to a HID usage ID")
+    #TODO: mutully exclude options
+    parser_map = subparsers.add_parser("map",
+                                       help="map hardware keys to other keys")
+    parser_map.add_argument("hadware_key", type=str)
+    parser_map.add_argument("mapped_key", type=str)
+    parser_map.add_argument(
+        "--hid",
+        type=str,
+        help="an hex string corresponding to a HID usage ID")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-test = EightBDKdb()
-test.map_hid_usage(0x29, [0x07, 0x00, 0x29])
+    test = EightBDKdb()
+    test.map_hid_usage(0x29, [0x07, 0x00, 0x29])
