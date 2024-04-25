@@ -97,7 +97,7 @@ if __name__ == "__main__":
         action="store_true",
         help="map directly to a HID Usage, not to a key name")
     parser_map.add_argument(
-        "hadware_key",
+        "hardware_key",
         type=str,
         help="the name of the hardware key whose mapping will be changed")
     parser_map.add_argument(
