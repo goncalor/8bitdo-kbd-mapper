@@ -4,6 +4,8 @@ import argparse
 import usb.core
 import usb.util
 
+import utils
+
 VENDOR_ID = 0x2dc8
 PRODUCT_ID = 0x5200
 
@@ -57,6 +59,19 @@ def get_8bd_endpoints():
     return endpoint_in, endpoint_out
 
 
+def cmd_list_keys(args):
+    print("Hardware keys")
+    print("-------------")
+    print()
+    utils.print_hw_keys()
+    print()
+    utils.print_usage_keys()
+
+
+def cmd_map(args):
+    pass
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Key mapper for 8BitDo\'s Retro Mechanical Keyboard")
@@ -64,11 +79,13 @@ if __name__ == "__main__":
 
     parser_list_keys = subparsers.add_parser(
         "list-keys", help="list the names of keys to be used in maps")
+    parser_list_keys.set_defaults(func=cmd_list_keys)
 
     parser_map = subparsers.add_parser(
         "map",
         formatter_class=argparse.RawTextHelpFormatter,
         help="map hardware keys to other keys")
+    parser_map.set_defaults(func=cmd_map)
     parser_map.add_argument(
         "--hid",
         action="store_true",
@@ -86,3 +103,5 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    args.func(args)
