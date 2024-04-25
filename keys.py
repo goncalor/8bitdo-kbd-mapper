@@ -99,7 +99,7 @@ HWKEY = {
 # HID Usages
 # https://www.usb.org/document-library/hid-usage-tables-15
 USAGE = {
-    "none": (0x070000, "No key pressed"),
+    "none": (0x070000, "(no key pressed)"),
     #
     "a": (0x070004, "Keyboard a and A"),
     "b": (0x070005, "Keyboard b and B"),

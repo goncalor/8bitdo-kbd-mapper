@@ -16,4 +16,5 @@ def print_hw_keys():
 
 
 def print_usage_keys():
-    pass
+    for key, val in keys.USAGE.items():
+        print(f"{key:14}  {val[1]}")

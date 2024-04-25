@@ -60,12 +60,18 @@ def get_8bd_endpoints():
 
 
 def cmd_list_keys(args):
+    print("Mappable keys")
+    print("-------------")
+    print()
+    utils.print_usage_keys()
+    print()
+    # print("Can't find the key you're looking for? Use \"map --hid\".")
+    # print()
     print("Hardware keys")
     print("-------------")
     print()
     utils.print_hw_keys()
     print()
-    utils.print_usage_keys()
 
 
 def cmd_map(args):
