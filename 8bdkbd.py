@@ -62,20 +62,27 @@ if __name__ == "__main__":
         description="Key mapper for 8BitDo\'s Retro Mechanical Keyboard")
     subparsers = parser.add_subparsers()
 
-    parser_map = subparsers.add_parser(
+    parser_list_keys = subparsers.add_parser(
         "list-keys", help="list the names of keys to be used in maps")
 
-    #TODO: mutully exclude options
-    parser_map = subparsers.add_parser("map",
-                                       help="map hardware keys to other keys")
-    parser_map.add_argument("hadware_key", type=str)
-    parser_map.add_argument("mapped_key", type=str)
+    parser_map = subparsers.add_parser(
+        "map",
+        formatter_class=argparse.RawTextHelpFormatter,
+        help="map hardware keys to other keys")
     parser_map.add_argument(
         "--hid",
+        action="store_true",
+        help="map directly to a HID Usage, not to a key name")
+    parser_map.add_argument(
+        "hadware_key",
         type=str,
-        help="an hex string corresponding to a HID usage ID")
+        help="the name of the hardware key whose mapping will be changed")
+    parser_map.add_argument(
+        "mapped_key",
+        type=str,
+        metavar="{mapped_key,hid_usage}",
+        help=
+        "the name of the key to map to (eg. \"esc\");\nor a HID Usage code hex string, when --hid is specified (eg. 070029);\nuse the \"list-keys\" subcommand for a key name reference"
+    )
 
     args = parser.parse_args()
-
-    test = EightBDKdb()
-    test.map_hid_usage(0x29, [0x07, 0x00, 0x29])
