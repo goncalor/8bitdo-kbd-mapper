@@ -15,6 +15,10 @@ ATTN = [0x52, 0x76, 0xff]
 MAP = [0x52, 0xfa, 0x03, 0x0c, 0x00, 0xaa, 0x09, 0x71]
 MAP_DONE = [0x52, 0x76, 0xa5]
 
+PROFILE_GET = [0x52, 0x80] + [0] * 31
+PROFILE_NAME = [0x54, 0x80, 0x10, 0x00]
+PROFILE_NONE = [0x54, 0x80, 0x00, 0x00]
+
 OK = [0x54, 0xe4, 0x08] + [0] * 30
 READY = [0x54, 0x8a, 0x07, 0x01] + [0] * 29  # nothing to report ?
 
@@ -36,7 +40,7 @@ class EightBDKdb:
         r = self.read(size, timeout)  # bytes
         if list(r) != expected:
             raise ValueError(
-                f"Read unexpected value\rExpected: {bytes(expected).hex()}\n    Read: {r.hex()}"
+                f"Read unexpected value\nExpected: {bytes(expected).hex()}\n    Read: {r.hex()}"
             )
 
         return r
@@ -52,6 +56,23 @@ class EightBDKdb:
 
         self.write(MAP_DONE)
         self.read_check(OK)
+
+    def get_profile_name(self):
+        self.write(ATTN)
+        self.read()
+
+        self.write(PROFILE_GET)
+        r = self.read()
+
+        if r.startswith(bytes(PROFILE_NONE)):
+            return None
+        if r.startswith(bytes(PROFILE_NAME)):
+            # skip 4 bytes, exclude trailing null bytes
+            return r.rstrip(bytes([0]))[4:].decode(encoding="utf-16-be")
+
+        raise ValueError(
+            f"Read unexpected value\nExpected: {bytes(PROFILE_NONE).hex()} or\n          {bytes(PROFILE_NAME).hex()}\n    Read: {r.hex()}"
+        )
 
 
 def get_8bd_endpoints():
@@ -96,7 +117,7 @@ def cmd_map(hwkey, usage):
     try:
         kbd.map_hid_usage(hwkey, usage)
     except Exception as e:
-        print(f"Failed mapping with error:\n{e}\nMaybe try again?")
+        print(f"Failed mapping with error: {e}\nMaybe try again?")
         sys.exit(1)
 
 
@@ -106,6 +127,23 @@ def cmd_map_key(args):
 
 def cmd_map_hid(args):
     cmd_map(args.hardware_key, args.hid_usage)
+
+
+def cmd_status(args):
+    # keyboard connected?
+    print("8BitDo connected: ", end="")
+    if usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID):
+        print("yes")
+    else:
+        print("no")
+        return
+
+    # profile name
+    kbd = EightBDKdb()
+    print("Profile name:", kbd.get_profile_name())
+
+    # mapped keys
+    pass
 
 
 def arg_hw_key(key):
@@ -174,6 +212,10 @@ if __name__ == "__main__":
         "hid_usage",
         type=arg_hid_usage,
         help="a HID Usage code hex string (eg. 070029 for \"esc\")")
+
+    parser_status = subparsers.add_parser(
+        "status", help="check and output current status")
+    parser_status.set_defaults(func=cmd_status)
 
     args = parser.parse_args()
 
