@@ -100,7 +100,17 @@ def arg_mapped_key(key):
 
 
 def arg_hid_usage(usage):
-    return usage
+    try:
+        usage = bytes.fromhex(usage)
+    except ValueError as e:
+        raise argparse.ArgumentTypeError(
+            f"could not convert '{usage}' to bytes. Maybe a digit is missing?")
+
+    # remaining buffer len, although usages should be shorter
+    if len(usage) > 24:
+        raise argparse.ArgumentTypeError(f"value '{usage}' is too long.")
+
+    return list(usage)
 
 
 if __name__ == "__main__":
@@ -136,7 +146,7 @@ if __name__ == "__main__":
         type=arg_hw_key,
         help="the name of the hardware key whose mapping will be changed")
     parser_map_hid.add_argument(
-        "mapped_key",
+        "hid_usage",
         type=arg_hid_usage,
         help="a HID Usage code hex string (eg. 070029 for \"esc\")")
 
