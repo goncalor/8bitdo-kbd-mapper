@@ -65,7 +65,7 @@ def cmd_list_keys(args):
     print()
     utils.print_usage_keys()
     print()
-    # print("Can't find the key you're looking for? Use \"map --hid\".")
+    # print("Can't find the key you're looking for? Use \"map-hid\".")
     # print()
     print("Hardware keys")
     print("-------------")
@@ -75,7 +75,23 @@ def cmd_list_keys(args):
 
 
 def cmd_map(args):
-    pass
+    print(args)
+
+
+def cmd_map_hid(args):
+    print(args)
+
+
+def arg_hw_key(key):
+    return key
+
+
+def arg_mapped_key(key):
+    return key
+
+
+def arg_hid_usage(key):
+    return key
 
 
 if __name__ == "__main__":
@@ -93,20 +109,27 @@ if __name__ == "__main__":
         help="map hardware keys to other keys")
     parser_map.set_defaults(func=cmd_map)
     parser_map.add_argument(
-        "--hid",
-        action="store_true",
-        help="map directly to a HID Usage, not to a key name")
-    parser_map.add_argument(
         "hardware_key",
-        type=str,
+        type=arg_hw_key,
         help="the name of the hardware key whose mapping will be changed")
     parser_map.add_argument(
         "mapped_key",
-        type=str,
-        metavar="{mapped_key,hid_usage}",
+        type=arg_mapped_key,
         help=
-        "the name of the key to map to (eg. \"esc\");\nor a HID Usage code hex string, when --hid is specified (eg. 070029);\nuse the \"list-keys\" subcommand for a key name reference"
+        "the name of the key to map to (eg. \"esc\");\nuse the \"list-keys\" subcommand for a key name reference"
     )
+
+    parser_map_hid = subparsers.add_parser(
+        "map-hid", help="map hardware keys to HID Usage codes")
+    parser_map_hid.set_defaults(func=cmd_map_hid)
+    parser_map_hid.add_argument(
+        "hardware_key",
+        type=arg_hw_key,
+        help="the name of the hardware key whose mapping will be changed")
+    parser_map_hid.add_argument(
+        "mapped_key",
+        type=arg_hid_usage,
+        help="a HID Usage code hex string (eg. 070029 for \"esc\")")
 
     args = parser.parse_args()
 
