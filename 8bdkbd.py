@@ -46,7 +46,9 @@ def get_8bd_endpoints():
     dev = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
 
     if dev is None:
-        raise ValueError("Could not find 8BitDo Retro Mechanical Keyboard")
+        raise ValueError(
+            "Could not find 8BitDo Retro Mechanical Keyboard. Is its cable connected?"
+        )
 
     # detach interface #2 if needed
     if dev.is_kernel_driver_active(2):
@@ -75,12 +77,21 @@ def cmd_list_keys(args):
     print()
 
 
-def cmd_map(args):
-    print(args)
+# TODO: create Key and Usage classes and store byte value but also name/hex
+# Those could be used to write things as "successfully mapped capslock to esc"
+def cmd_map(hwkey, usage):
+    print(hwkey, usage)
+
+    kbd = EightBDKdb()
+    kbd.map_hid_usage(hwkey, usage)
+
+
+def cmd_map_key(args):
+    cmd_map(args.hardware_key, args.mapped_key)
 
 
 def cmd_map_hid(args):
-    print(args)
+    cmd_map(args.hardware_key, args.hid_usage)
 
 
 def arg_hw_key(key):
@@ -88,7 +99,7 @@ def arg_hw_key(key):
         raise argparse.ArgumentTypeError(
             f"unknown value '{key}'.\nUse \"list-keys\" to list known values.")
 
-    return key
+    return keys.HWKEY[key]
 
 
 def arg_mapped_key(key):
@@ -126,7 +137,7 @@ if __name__ == "__main__":
         "map",
         formatter_class=argparse.RawTextHelpFormatter,
         help="map hardware keys to other keys")
-    parser_map.set_defaults(func=cmd_map)
+    parser_map.set_defaults(func=cmd_map_key)
     parser_map.add_argument(
         "hardware_key",
         type=arg_hw_key,
