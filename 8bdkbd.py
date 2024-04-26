@@ -22,7 +22,8 @@ PROFILE_NONE = [0x54, 0x80, 0x00, 0x00]
 PROFILE_GET_MAPPED = [0x52, 0x81] + [0] * 31
 PROFILE_MAPPED = [0x54, 0x81]
 
-PROFILE_DELETE = [0x52, 0x70]
+PROFILE_DELETE = [0x52, 0x70] + [0] * 31
+PROFILE_RENAME = [0x52, 0x70, 0x10, 0x00]
 
 MAPPING_GET = [0x52, 0x83]
 
@@ -128,6 +129,17 @@ class EightBDKdb:
 
     def delete_profile(self):
         self.write(PROFILE_DELETE)
+        r = self.read_check(OK)
+        print(r.hex())
+
+    def rename_profile(self, name):
+        #TODO: name length is not well tested
+        assert len(name) < 25
+        self.write(ATTN)
+        r = self.read()
+        print(r.hex())
+
+        self.write(PROFILE_RENAME + list(name.encode(encoding="utf-16-be")))
         r = self.read_check(OK)
         print(r.hex())
 
