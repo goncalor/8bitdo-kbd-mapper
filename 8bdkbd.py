@@ -19,8 +19,8 @@ class EightBDKdb:
 
     def __init__(self):
         self.ep_read, self.ep_write = get_8bd_endpoints()
-        print(self.ep_read)
-        print(self.ep_write)
+        # print(self.ep_read)
+        # print(self.ep_write)
 
     def read(self, size=64, timeout=1000):
         return self.ep_read.read(size, timeout).tobytes()
@@ -29,17 +29,16 @@ class EightBDKdb:
         return self.ep_write.write(data + [0] * (33 - len(data)))
 
     def map_hid_usage(self, hwkey, usage):
-        #TODO: verify data length
-        #TODO: verify key value makes sense
+        assert len(usage) <= 24
         self.write(ATTN)
-        print(self.read().hex())
+        r = self.read().hex()
+        print(r)
         self.write(MAP + [hwkey] + usage)
-        print(self.read().hex())
+        r = self.read().hex()
+        print(r)
         self.write(MAP_DONE)
-        print(self.read().hex())
-
-    def map_key(self, hwkey, key):
-        pass
+        r = self.read().hex()
+        print(r)
 
 
 def get_8bd_endpoints():
@@ -80,8 +79,6 @@ def cmd_list_keys(args):
 # TODO: create Key and Usage classes and store byte value but also name/hex
 # Those could be used to write things as "successfully mapped capslock to esc"
 def cmd_map(hwkey, usage):
-    print(hwkey, usage)
-
     kbd = EightBDKdb()
     kbd.map_hid_usage(hwkey, usage)
 
