@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 import time
 import argparse
 import usb.core
@@ -14,6 +15,9 @@ ATTN = [0x52, 0x76, 0xff]
 MAP = [0x52, 0xfa, 0x03, 0x0c, 0x00, 0xaa, 0x09, 0x71]
 MAP_DONE = [0x52, 0x76, 0xa5]
 
+OK = [0x54, 0xe4, 0x08] + [0] * 30
+READY = [0x54, 0x8a, 0x07, 0x01] + [0] * 29  # nothing to report ?
+
 
 class EightBDKdb:
 
@@ -28,17 +32,26 @@ class EightBDKdb:
     def write(self, data, size=33):
         return self.ep_write.write(data + [0] * (33 - len(data)))
 
+    def read_check(self, expected, size=64, timeout=1000):
+        r = self.read(size, timeout)  # bytes
+        if list(r) != expected:
+            raise ValueError(
+                f"Read unexpected value\rExpected: {bytes(expected).hex()}\n    Read: {r.hex()}"
+            )
+
+        return r
+
     def map_hid_usage(self, hwkey, usage):
         assert len(usage) <= 24
+
         self.write(ATTN)
-        r = self.read().hex()
-        print(r)
+        self.read()
+
         self.write(MAP + [hwkey] + usage)
-        r = self.read().hex()
-        print(r)
+        self.read_check(OK)
+
         self.write(MAP_DONE)
-        r = self.read().hex()
-        print(r)
+        self.read_check(OK)
 
 
 def get_8bd_endpoints():
@@ -51,7 +64,7 @@ def get_8bd_endpoints():
 
     # detach interface #2 if needed
     if dev.is_kernel_driver_active(2):
-        print("detaching kernel driver")
+        print("detaching kernel driver", file=sys.stderr)
         dev.detach_kernel_driver(2)
 
     # [config][(interface, alternate)][endpoint]
@@ -80,7 +93,11 @@ def cmd_list_keys(args):
 # Those could be used to write things as "successfully mapped capslock to esc"
 def cmd_map(hwkey, usage):
     kbd = EightBDKdb()
-    kbd.map_hid_usage(hwkey, usage)
+    try:
+        kbd.map_hid_usage(hwkey, usage)
+    except Exception as e:
+        print(f"Failed mapping with error:\n{e}\nMaybe try again?")
+        sys.exit(1)
 
 
 def cmd_map_key(args):
