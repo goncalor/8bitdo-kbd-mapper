@@ -15,9 +15,12 @@ ATTN = [0x52, 0x76, 0xff]
 MAP = [0x52, 0xfa, 0x03, 0x0c, 0x00, 0xaa, 0x09, 0x71]
 MAP_DONE = [0x52, 0x76, 0xa5]
 
-PROFILE_GET = [0x52, 0x80] + [0] * 31
+PROFILE_GET_NAME = [0x52, 0x80] + [0] * 31
 PROFILE_NAME = [0x54, 0x80, 0x10, 0x00]
 PROFILE_NONE = [0x54, 0x80, 0x00, 0x00]
+
+PROFILE_GET_MAPPED = [0x52, 0x81] + [0] * 31
+PROFILE_MAPPED = [0x54, 0x81]
 
 OK = [0x54, 0xe4, 0x08] + [0] * 30
 READY = [0x54, 0x8a, 0x07, 0x01] + [0] * 29  # nothing to report ?
@@ -61,7 +64,7 @@ class EightBDKdb:
         self.write(ATTN)
         self.read()
 
-        self.write(PROFILE_GET)
+        self.write(PROFILE_GET_NAME)
         r = self.read()
 
         if r.startswith(bytes(PROFILE_NONE)):
@@ -73,6 +76,33 @@ class EightBDKdb:
         raise ValueError(
             f"Read unexpected value\nExpected: {bytes(PROFILE_NONE).hex()} or\n          {bytes(PROFILE_NAME).hex()}\n    Read: {r.hex()}"
         )
+
+    def get_mapped_keys(self):
+        self.write(ATTN)
+        self.read()
+
+        self.write(PROFILE_GET_MAPPED)
+
+        # loop read until we have received all mapped keys
+        r = self.read()
+        keymap = bytes() + r[2:-1]  # last byte is a marker
+        while r[-1] == 0x01:  # indicates there are more maps
+            r = self.read()
+            keymap += r[2:]
+
+        mapped_keys = []
+        for i, kc in enumerate(keymap):
+            if i % 2 == 1:  # separator
+                continue
+            elif kc == 0:  # no more keys mapped
+                break
+            else:  # key mapped
+                for key, val in keys.HWKEY.items():
+                    if val == kc:
+                        mapped_keys.append(key)
+                        break
+
+        return mapped_keys
 
 
 def get_8bd_endpoints():
@@ -140,10 +170,11 @@ def cmd_status(args):
 
     # profile name
     kbd = EightBDKdb()
-    print("Profile name:", kbd.get_profile_name())
+    print("    Profile name:", kbd.get_profile_name())
 
     # mapped keys
-    pass
+    mapped = kbd.get_mapped_keys()
+    print("     Mapped keys:", " ".join(mapped))
 
 
 def arg_hw_key(key):
