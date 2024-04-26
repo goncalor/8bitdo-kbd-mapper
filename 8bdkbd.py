@@ -22,6 +22,8 @@ PROFILE_NONE = [0x54, 0x80, 0x00, 0x00]
 PROFILE_GET_MAPPED = [0x52, 0x81] + [0] * 31
 PROFILE_MAPPED = [0x54, 0x81]
 
+PROFILE_DELETE = [0x52, 0x70]
+
 MAPPING_GET = [0x52, 0x83]
 
 OK = [0x54, 0xe4, 0x08] + [0] * 30
@@ -108,7 +110,7 @@ class EightBDKdb:
 
     def get_key_mapping(self, key):
         self.write(ATTN)
-        r = self.read()
+        self.read()
 
         self.write(MAPPING_GET + [keys.HWKEY[key]])
         r = self.read()
@@ -123,6 +125,11 @@ class EightBDKdb:
 
         # if no name was found, return HID code
         return "HID " + hid.hex()
+
+    def delete_profile(self):
+        self.write(PROFILE_DELETE)
+        r = self.read_check(OK)
+        print(r.hex())
 
 
 def get_8bd_endpoints():
