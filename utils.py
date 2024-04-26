@@ -18,3 +18,10 @@ def print_hw_keys():
 def print_usage_keys():
     for key, val in keys.USAGE.items():
         print(f"{key:14}  {val[1]}")
+
+
+def int_to_bytes(i):
+    val = f"{i:x}"
+    if len(val) % 2 != 0:
+        val = "0" + val
+    return list(bytes.fromhex(val))

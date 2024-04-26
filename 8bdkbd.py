@@ -4,6 +4,7 @@ import argparse
 import usb.core
 import usb.util
 
+import keys
 import utils
 
 VENDOR_ID = 0x2dc8
@@ -83,15 +84,23 @@ def cmd_map_hid(args):
 
 
 def arg_hw_key(key):
+    if not key in keys.HWKEY:
+        raise argparse.ArgumentTypeError(
+            f"unknown value '{key}'.\nUse \"list-keys\" to list known values.")
+
     return key
 
 
 def arg_mapped_key(key):
-    return key
+    if not key in keys.USAGE:
+        raise argparse.ArgumentTypeError(
+            f"unknown value '{key}'.\nUse \"list-keys\" to list known values.")
+
+    return utils.int_to_bytes(keys.USAGE[key][0])
 
 
-def arg_hid_usage(key):
-    return key
+def arg_hid_usage(usage):
+    return usage
 
 
 if __name__ == "__main__":
