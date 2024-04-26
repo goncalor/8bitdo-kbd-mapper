@@ -22,6 +22,8 @@ PROFILE_NONE = [0x54, 0x80, 0x00, 0x00]
 PROFILE_GET_MAPPED = [0x52, 0x81] + [0] * 31
 PROFILE_MAPPED = [0x54, 0x81]
 
+MAPPING_GET = [0x52, 0x83]
+
 OK = [0x54, 0xe4, 0x08] + [0] * 30
 READY = [0x54, 0x8a, 0x07, 0x01] + [0] * 29  # nothing to report ?
 
@@ -104,6 +106,24 @@ class EightBDKdb:
 
         return mapped_keys
 
+    def get_key_mapping(self, key):
+        self.write(ATTN)
+        r = self.read()
+
+        self.write(MAPPING_GET + [keys.HWKEY[key]])
+        r = self.read()
+
+        #TODO: check receive 0x5483 [key]
+
+        hid = r.rstrip(bytes([0]))[3:]
+        hid_int = int.from_bytes(hid)
+        for name, val in keys.USAGE.items():
+            if val[0] == hid_int:
+                return name
+
+        # if no name was found, return HID code
+        return "HID " + hid.hex()
+
 
 def get_8bd_endpoints():
     dev = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -175,6 +195,11 @@ def cmd_status(args):
     # mapped keys
     mapped = kbd.get_mapped_keys()
     print("     Mapped keys:", " ".join(mapped))
+
+    # key mapings
+    print()
+    for key in mapped:
+        print(f"     {key} ->", kbd.get_key_mapping(key))
 
 
 def arg_hw_key(key):
