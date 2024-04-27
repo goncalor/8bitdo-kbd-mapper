@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import sys
 import time
 import argparse
@@ -136,7 +135,3 @@ def get_8bd_endpoints():
     endpoint_out = dev[0][(2, 0)][1]
 
     return endpoint_in, endpoint_out
-
-
-if __name__ == "__main__":
-    cli.main()
