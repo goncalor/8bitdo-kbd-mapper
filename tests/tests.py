@@ -1,6 +1,7 @@
 import unittest
 
-import keys
+import eightbdkbd
+from eightbdkbd import keys
 
 
 class TestMappings(unittest.TestCase):
