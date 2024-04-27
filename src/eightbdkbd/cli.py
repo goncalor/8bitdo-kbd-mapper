@@ -5,10 +5,8 @@ import usb.core
 import keys
 import utils
 import consts
+from eightbdkdb import EightBDKdb
 
-#FIXME: temporary hack
-eightbdkdb = __import__("8bdkbd")
-EightBDKdb = eightbdkdb.EightBDKdb
 
 def main():
     parser = argparse.ArgumentParser(
