@@ -26,6 +26,7 @@ PROFILE_DELETE = [0x52, 0x70]
 PROFILE_RENAME = [0x52, 0x70, 0x10, 0x00]
 
 MAPPING_GET = [0x52, 0x83]
+MAPPING = [0x54, 0x83]
 
 OK = [0x54, 0xe4, 0x08]
 READY = [0x54, 0x8a, 0x07, 0x01]  # nothing to report ?
@@ -44,11 +45,11 @@ class EightBDKdb:
     def write(self, data, size=33):
         return self.ep_write.write(data + [0] * (33 - len(data)))
 
-    def read_check(self, expected, size=64, timeout=1000):
+    def read_check_start(self, expected, size=64, timeout=1000):
         r = self.read(size, timeout)  # bytes
-        if list(r) != expected:
+        if not r.startswith(bytes(expected)):
             raise ValueError(
-                f"Read unexpected value\nExpected: {bytes(expected).hex()}\n    Read: {r.hex()}"
+                f"Read unexpected start value\nExpected: {bytes(expected).hex()}\n    Read: {r.hex()}"
             )
 
         return r
@@ -60,10 +61,10 @@ class EightBDKdb:
         self.read()
 
         self.write(MAP + [hwkey] + usage)
-        self.read_check(OK)
+        self.read_check_start(OK)
 
         self.write(MAP_DONE)
-        self.read_check(OK)
+        self.read_check_start(OK)
 
     def get_profile_name(self):
         self.write(ATTN)
@@ -89,10 +90,10 @@ class EightBDKdb:
         self.write(PROFILE_GET_MAPPED)
 
         # loop read until we have received all mapped keys
-        r = self.read()
+        r = self.read_check_start(PROFILE_MAPPED)
         keymap = bytes() + r[2:-1]  # last byte is a marker
         while r[-1] == 0x01:  # indicates there are more maps
-            r = self.read()
+            r = self.read_check_start(PROFILE_MAPPED)
             keymap += r[2:]
 
         mapped_keys = []
@@ -114,9 +115,7 @@ class EightBDKdb:
         self.read()
 
         self.write(MAPPING_GET + [keys.HWKEY[key]])
-        r = self.read()
-
-        #TODO: check receive 0x5483 [key]
+        r = self.read_check_start(MAPPING)
 
         hid = r.rstrip(bytes([0]))[3:]
         hid_int = int.from_bytes(hid)
@@ -129,7 +128,7 @@ class EightBDKdb:
 
     def delete_profile(self):
         self.write(PROFILE_DELETE)
-        self.read_check(OK)
+        self.read_check_start(OK)
 
     def rename_profile(self, name):
         #TODO: name length is not well tested
@@ -138,7 +137,7 @@ class EightBDKdb:
         self.read()
 
         self.write(PROFILE_RENAME + list(name.encode(encoding="utf-16-be")))
-        self.read_check(OK)
+        self.read_check_start(OK)
 
 
 def get_8bd_endpoints():
