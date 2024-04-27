@@ -129,19 +129,16 @@ class EightBDKdb:
 
     def delete_profile(self):
         self.write(PROFILE_DELETE)
-        r = self.read_check(OK)
-        print(r.hex())
+        self.read_check(OK)
 
     def rename_profile(self, name):
         #TODO: name length is not well tested
         assert len(name) < 25
         self.write(ATTN)
-        r = self.read()
-        print(r.hex())
+        self.read()
 
         self.write(PROFILE_RENAME + list(name.encode(encoding="utf-16-be")))
-        r = self.read_check(OK)
-        print(r.hex())
+        self.read_check(OK)
 
 
 def get_8bd_endpoints():
@@ -221,6 +218,22 @@ def cmd_status(args):
         print(f"     {key} ->", kbd.get_key_mapping(key))
 
 
+def cmd_profile(args):
+    pass
+
+
+def cmd_profile_create(args):
+    kbd = EightBDKdb()
+    kbd.rename_profile(args.name)
+    print("Successfully created profile")
+
+
+def cmd_profile_delete(args):
+    kbd = EightBDKdb()
+    kbd.delete_profile()
+    print("Successfully deleted profile")
+
+
 def arg_hw_key(key):
     if not key in keys.HWKEY:
         raise argparse.ArgumentTypeError(
@@ -292,6 +305,20 @@ if __name__ == "__main__":
         "status", help="check and output current status")
     parser_status.set_defaults(func=cmd_status)
 
-    args = parser.parse_args()
+    parser_profile = subparsers.add_parser("profile", help="manage profile")
+    parser_profile_sub = parser_profile.add_subparsers(required=True)
+    # parser_profile.set_defaults(func=cmd_profile)
 
+    parser_profile_create = parser_profile_sub.add_parser(
+        "create", help="create a new profile (or enable current maps)")
+    parser_profile_create.set_defaults(func=cmd_profile_create)
+    parser_profile_create.add_argument("name",
+                                       type=str,
+                                       help="a name for the new profile")
+
+    parser_profile_delete = parser_profile_sub.add_parser(
+        "delete", help="delete current profile (clears maps)")
+    parser_profile_delete.set_defaults(func=cmd_profile_delete)
+
+    args = parser.parse_args()
     args.func(args)
