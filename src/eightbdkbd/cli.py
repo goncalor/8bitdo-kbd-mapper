@@ -5,7 +5,7 @@ import usb.core
 import keys
 import utils
 import consts
-from eightbdkdb import EightBDKdb
+from client import EightBDKdb
 
 
 def main():
