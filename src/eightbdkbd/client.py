@@ -1,12 +1,7 @@
 import sys
-import time
-import argparse
 import usb.core
 
-import cli
 import keys
-import utils
-from consts import *
 
 
 class EightBDKdb:
