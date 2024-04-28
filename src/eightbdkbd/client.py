@@ -2,6 +2,7 @@ import sys
 import usb.core
 
 import keys
+from consts import *
 
 
 class EightBDKdb:
