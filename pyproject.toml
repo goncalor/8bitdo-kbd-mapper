@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "8bdkbd"
-version = "0.1"
+version = "0.2"
 dependencies = [
     "pyusb"
 ]

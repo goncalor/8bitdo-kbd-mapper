@@ -95,6 +95,7 @@ def cmd_map(hwkey, usage):
     except Exception as e:
         print(f"Failed mapping with error: {e}\nMaybe try again?")
         sys.exit(1)
+    print("Successfully mapped key")
 
 
 def cmd_map_key(args):
