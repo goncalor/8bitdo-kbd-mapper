@@ -12,9 +12,9 @@ Why?
 I bought an 8BitDo Mechanical Keyboard and wanted to map a specific key to the A and B programmable keys. I couldn't do it with 8BitDo's "Ultimate Software v2". For me this meant I could not type `<` or `>` with my keyboard layout. Since the Ultimate Software is proprietary, I could not change the code to add an option to map to the missing key either. Also, this software is only available for Windows.
 
 In short, I wrote `8bdkbd` so that:
-- anyone could map keyboard keys to whichever key they wanted
-- the keyboard could be configured from GNU/Linux systems
-- a free and open-source (FOSS) software was available for people to modify/study
+- anyone can map keyboard keys to whichever key they wanted
+- the keyboard can be configured from GNU/Linux systems
+- a free and open-source (FOSS) software is available for people to modify/study
 
 
 Installation
@@ -49,13 +49,13 @@ If you run `8bdkbd` without any other arguments it will print available options:
 ### Prerequisites
 
 - You need to connect your 8BitDo keyboard to your computer through USB and ensure its power switch is set to "off" (otherwise it does not communicate over USB)
-- `8bdkbd` must be run with `sudo` because the kernel's `hidraw` will normally bind the interface we need to connect to. `8bdkbd` needs superpowers to unbind the interface from `hidraw`
+- `8bdkbd` must be run with `sudo` because the kernel's `hidraw` driver will normally bind the USB interface we need to connect to. `8bdkbd` needs privileges to unbind the interface from `hidraw`
   - I don't like this but I have no better solution at the moment. If you know of a better way to do this (possibly some `udev` rules?) please open an issue and let me know
 
 
 ### Checking the status
 
-Status can be checked with `8bdkbd status`. With no profile created it would output:
+Status can be checked with `8bdkbd status`. With no profile created it should output:
 
     8BitDo connected: yes
         Profile name: None
@@ -63,6 +63,8 @@ Status can be checked with `8bdkbd status`. With no profile created it would out
 
 
 ### Creating a profile
+
+To create a profile called "awesome":
 
     # 8bdkbd profile create awesome
     Successfully created profile
@@ -72,7 +74,7 @@ Status can be checked with `8bdkbd status`. With no profile created it would out
         Profile name: awesome
          Mapped keys:
 
-`create` can also be used to rename the profile.
+`create` can also be used to rename the current profile.
 
 
 ### Mapping keys
@@ -97,7 +99,7 @@ The result in both cases, starting with an empty map would be:
 
 ### Listing key names
 
-Okay, but "how do I know the keys' names?" You can use `list-keys`:
+Okay, but "how do I know the names for the keys?" You can use `list-keys`:
 
     $ 8bdkbd list-keys
     Mappable keys
@@ -123,7 +125,7 @@ Okay, but "how do I know the keys' names?" You can use `list-keys`:
 
 ### Unmapping a key
 
-It's simple, just map it back to itself:
+Just map it back to itself:
 
     # 8bdkbd map esc esc
 
@@ -154,6 +156,7 @@ Improvements
 ------------
 
 - [ ] add support for macros
+- [ ] add support for external Super Buttons
 
 
 Why not Rust?
