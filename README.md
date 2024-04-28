@@ -17,8 +17,18 @@ In short, I wrote `8bdkbd` so that:
 - a free and open-source (FOSS) software was available for people to modify/study
 
 
+Installation
+------------
+
+Clone the repository, `cd` into it and run
+
+    sudo pip install .
+
+
 How to use it
 -------------
+
+If you run `8bdkbd` without any other arguments it will print available options:
 
     usage: 8bdkbd [-h] {list-keys,map,map-hid,status,profile} ...
 
@@ -34,6 +44,116 @@ How to use it
 
     options:
       -h, --help            show this help message and exit
+
+
+### Prerequisites
+
+- You need to connect your 8BitDo keyboard to your computer through USB and ensure its power switch is set to "off" (otherwise it does not communicate over USB)
+- `8bdkbd` must be run with `sudo` because the kernel's `hidraw` will normally bind the interface we need to connect to. `8bdkbd` needs superpowers to unbind the interface from `hidraw`
+  - I don't like this but I have no better solution at the moment. If you know how of a better way to do this (possibly some `udev` rules?) please open an issue and let me know
+
+
+### Checking the status
+
+Status can be checked with `8bdkbd status`. With no profile created it would output:
+
+    8BitDo connected: yes
+        Profile name: None
+         Mapped keys:
+
+
+### Creating a profile
+
+    # 8bdkbd profile create awesome
+    Successfully created profile
+
+    # 8bdkbd status
+    8BitDo connected: yes
+        Profile name: awesome
+         Mapped keys:
+
+`create` can also be used to rename the profile.
+
+
+### Mapping keys
+
+Keys can be mapped through their names.
+
+    # 8bdkbd map capslock esc
+
+Or they can be mapped through [HID usage codes][hid-usage-codes] if you can't find the key you want.
+
+    # 8bdkbd map-hid capslock 070029
+
+The result in both cases, starting with an empty map would be:
+
+    # 8bdkbd status
+    8BitDo connected: yes
+        Profile name: awesome
+         Mapped keys: capslock
+
+         capslock -> esc
+
+
+### Listing key names
+
+Okay, but "how do I know the keys' names?" You can use `list-keys`:
+
+    $ 8bdkbd list-keys
+    Mappable keys
+    -------------
+
+    none            (no key pressed)
+    a               Keyboard a and A
+    b               Keyboard b and B
+    c               Keyboard c and C
+
+    ...
+
+    Hardware keys
+    -------------
+
+    esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 prtsc scrlk pause
+    grave 1 2 3 4 5 6 7 8 9 0 minus equal backspace insert home pageup
+    tab q w e r t y u i o p leftbrace rightbrace backslash delete end pagedown
+    capslock a s d f g h j k l semicolon apostrophe enter
+    leftshift z x c v b n m comma dot slash rightshift up
+    leftctrl windows leftalt space rightalt superb supera rightctrl left down right
+
+
+### Unmapping a key
+
+It's simple, just map it back to itself:
+
+    # 8bdkbd map esc esc
+
+
+### Making a key not work
+
+Map it to "none":
+
+    # 8bdkbd map capslock none
+
+
+### Deleting a profile
+
+You can delete a profile to clear all of the mappings at once:
+
+    # 8bdkbd profile delete
+    Successfully deleted profile
+
+    # 8bdkbd status
+    8BitDo connected: yes
+        Profile name: None
+         Mapped keys:
+
+
+[hid-usage-codes]: https://www.usb.org/sites/default/files/hut1_5.pdf
+
+Improvements
+------------
+
+- [ ] add support for macros
 
 
 Why not Rust?
