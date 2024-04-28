@@ -50,7 +50,7 @@ If you run `8bdkbd` without any other arguments it will print available options:
 
 - You need to connect your 8BitDo keyboard to your computer through USB and ensure its power switch is set to "off" (otherwise it does not communicate over USB)
 - `8bdkbd` must be run with `sudo` because the kernel's `hidraw` will normally bind the interface we need to connect to. `8bdkbd` needs superpowers to unbind the interface from `hidraw`
-  - I don't like this but I have no better solution at the moment. If you know how of a better way to do this (possibly some `udev` rules?) please open an issue and let me know
+  - I don't like this but I have no better solution at the moment. If you know of a better way to do this (possibly some `udev` rules?) please open an issue and let me know
 
 
 ### Checking the status

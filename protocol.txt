@@ -1,0 +1,225 @@
+These are some notes I took on the protocol as I was reversing it. Some of the notes will be out-of-date.
+
+
+The keyboard has three USB interfaces. The one of interest has the following description.
+
+# 8BitDo 8BitDo Retro Keyboard
+# 0x05, 0x8c,                    // Usage Page (Bar Code Scanner)       0
+# 0x09, 0x01,                    // Usage (Vendor Usage 0x01)           2
+# 0xa1, 0x01,                    // Collection (Application)            4
+
+# 0x85, 0xb1,                    //  Report ID (177)                    6
+# 0x09, 0x02,                    //  Usage (Vendor Usage 0x02)          8
+# 0x15, 0x00,                    //  Logical Minimum (0)                10
+# 0x26, 0xff, 0x00,              //  Logical Maximum (255)              12
+# 0x75, 0x08,                    //  Report Size (8)                    15
+# 0x95, 0x20,                    //  Report Count (32)                  17
+# 0x81, 0x02,                    //  Input (Data,Var,Abs)               19
+
+# 0x85, 0xb2,                    //  Report ID (178)                    21
+# 0x09, 0x03,                    //  Usage (Vendor Usage 0x03)          23
+# 0x95, 0x20,                    //  Report Count (32)                  25
+# 0x75, 0x08,                    //  Report Size (8)                    27
+# 0x15, 0x00,                    //  Logical Minimum (0)                29
+# 0x26, 0xff, 0x00,              //  Logical Maximum (255)              31
+# 0x91, 0x02,                    //  Output (Data,Var,Abs)              34
+
+# 0x85, 0x54,                    //  Report ID (84)                     36
+# 0x15, 0x00,                    //  Logical Minimum (0)                38
+# 0x26, 0xff, 0x00,              //  Logical Maximum (255)              40
+# 0x09, 0x07,                    //  Usage (Vendor Usage 0x07)          43
+# 0x75, 0x08,                    //  Report Size (8)                    45
+# 0x95, 0x20,                    //  Report Count (32)                  47
+# 0x81, 0x02,                    //  Input (Data,Var,Abs)               49
+
+# 0x85, 0x51,                    //  Report ID (81)                     51
+# 0x09, 0x08,                    //  Usage (Vendor Usage 0x08)          53
+# 0x95, 0x20,                    //  Report Count (32)                  55
+# 0x75, 0x08,                    //  Report Size (8)                    57
+# 0x15, 0x00,                    //  Logical Minimum (0)                59
+# 0x26, 0xff, 0x00,              //  Logical Maximum (255)              61
+# 0x91, 0x02,                    //  Output (Data,Var,Abs)              64
+
+# 0x85, 0x52,                    //  Report ID (82)                     66
+# 0x09, 0x09,                    //  Usage (Vendor Usage 0x09)          68
+# 0x95, 0x20,                    //  Report Count (32)                  70
+# 0x75, 0x08,                    //  Report Size (8)                    72
+# 0x15, 0x00,                    //  Logical Minimum (0)                74
+# 0x26, 0xff, 0x00,              //  Logical Maximum (255)              76
+# 0x91, 0x02,                    //  Output (Data,Var,Abs)              79
+
+# 0xc0,                          // End Collection                      81
+
+
+-----
+
+
+Map a key
+---------
+
+Send (attention?):
+5276ff000000000000000000000000000000000000000000000000000000000000
+
+Receive (nothing to report?):
+548a07010000000000000000000000000000000000000000000000000000000000
+
+Send:
+52fa030c00aa0971 29 07 0004 000000000000000000000000000000000000000000
+------fixed----- |  |  |
+   hardware key -/  |  |
+kbd(07) / mouse(01)-/  |
+            mapped key-/
+
+Receive (ok?):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+Send (not needed?):
+5276a5000000000000000000000000000000000000000000000000000000000000
+
+Receive (ok?):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+Next reads will receive (nothing to report?):
+548a07010000000000000000000000000000000000000000000000000000000000
+
+
+Reset a key
+-----------
+
+Set it to it's default key (e.g. Esc to Esc).
+
+
+Disable a key
+-------------
+
+Set it to 0000. Example, disable B super key:
+
+52fa030c00aa0971 6c 07 0000000000000000000000000000000000000000000000
+
+
+Load a profile in software
+--------------------------
+
+Send:
+5276ff000000000000000000000000000000000000000000000000000000000000
+
+Receive (ok):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+Send:
+528000000000000000000000000000000000000000000000000000000000000000
+
+Receive profile name:
+5480 1000 00700072006f00660069006c0065003100000000000000000000000000
+|    |    --- profile name (UTF-16 ??) -----------------------------
+fixd |
+     \- profile present (yes: 1000, no: 0000)
+     
+    54 80 10 00 00 70 00 72 00 6f 00 66 00 69 00 6c   T....p.r.o.f.i.l
+    00 65 00 31 00 00 00 00 00 00 00 00 00 00 00 00   .e.1............
+    00                                                .
+
+Example no profile:
+5480 0000 0000000000000000000000000000000000000000000000000000000000
+
+Send (if profile present):
+528100000000000000000000000000000000000000000000000000000000000000
+
+Seems less than 1 ms (0.7 ms ok) must pass between previous message.
+
+Receive which keys are mapped:
+Example 1, only Esc (0x29) key mapped:
+5481 29 07 0000000000000000000000000000000000000000000000000000000000
+|    |  |  \- terminator
+fixd |  |
+ key-/  |
+delimit-/
+
+Example 2, many mapped keys:
+5481 04 07 07 07 08 0709070a070b070c070d070e070f0712071307140715071607 01
+5481 17 07 18 07 1a 071c071e071f07200721072207230724072507260727072807 01
+5481 29 07 2a 07 2b 072c072d072e072f073007310733073407350739073a073b07 01
+5481 3c 07 3d 07 3e 073f0740074107420743074407450746074707480749074a07 01
+5481 4b 07 4c 07 4d 074e074f07500751076407650766076707680769076a076c07 01
+5481 6d 07 00 00 00 00000000000000000000000000000000000000000000000000 00
+
+
+Get key mapping
+---------------
+
+Send (attention?):
+5276ff000000000000000000000000000000000000000000000000000000000000
+
+Receive (ok?):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+Send:
+5283 04 000000000000000000000000000000000000000000000000000000000000
+|    |
+fixd |
+hkey-/
+
+Receive:
+5483 04 07 0005 000000000000000000000000000000000000000000000000000000
+|    |  |  |
+fixd |  |  |
+hkey-/  |  |
+hid tab-/  |
+mapped key-/
+
+Delete/reset profile
+--------------------
+
+Send:
+527000000000000000000000000000000000000000000000000000000000000000
+
+Receive (ok?):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+
+Create profile
+--------------
+
+Send (reset?):
+527000000000000000000000000000000000000000000000000000000000000000
+
+Receive (ok?):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+Send (profile name, see rename):
+5270100000700072006f00660069006c0065003100000000000000000000000000
+
+Receive (ok?):
+54e408000000000000000000000000000000000000000000000000000000000000
+
+
+Rename profile
+--------------
+
+Send "attention"? Seemingly uneeded?
+
+Send:
+52701000 00700072006f00660069006c0065003100000000000000000000000000
+-fixed-- --- profile name (UTF-16 ??) -----------------------------
+
+    52 70 10 00 00 70 00 72 00 6f 00 66 00 69 00 6c   Rp...p.r.o.f.i.l
+    00 65 00 33 00 00 00 00 00 00 00 00 00 00 00 00   .e.3............
+    00                                                .
+
+
+error ??
+--------
+
+receive:
+0c00000000000000000000000000000000
+
+
+report firmware version ??
+--------------------------
+
+b2aa5503fc01606000000000000000000000000000000000000000000000000000
+
+
+
+- mapping keys in inactive profiles does not write them. unmapped profiles exist only on the PC
+- protocol seems timing sensitive. some things work only if less than x time passes between messages
