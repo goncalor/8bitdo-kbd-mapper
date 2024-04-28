@@ -221,4 +221,13 @@ USAGE = {
     "rightalt": (0x0700e6, "Keyboard Right Alt"),
     "rightmeta": (0x0700e7, "Keyboard Right GUI"),
     "superb": (0x0700e7, "Keyboard Right GUI"),  # alias for rightmeta
+    #
+    "playpause": (0x0ccd00, "Play/Pause"),
+    "previoussong": (0x0cb500, "Scan Next Track"),
+    "nextsong": (0x0cb600, "Scan Previous Track"),
+    "mute": (0x0ce200, "Mute"),
+    "volumeup": (0x0ce900, "Volume Increment"),
+    "volumedown": (0x0cea00, "Volume Decrement"),
+    #
+    "calc": (0x0c9201, "AL Calculator"),
 }
