@@ -99,6 +99,12 @@ HWKEY = {
 
 # HID Usages
 # https://www.usb.org/document-library/hid-usage-tables-15
+#
+# Key names match from Linux's event codes.
+# Key descriptions are from HID.
+#
+# A way to test/debug is to use `evtest [--grab] /dev/input/by-id/...`
+#
 USAGE = {
     "none": (0x070000, "(no key pressed)"),
     #
@@ -222,6 +228,7 @@ USAGE = {
     "rightmeta": (0x0700e7, "Keyboard Right GUI"),
     "superb": (0x0700e7, "Keyboard Right GUI"),  # alias for rightmeta
     #
+    # Lower two bytes here seem swapped from the HID spec, unsure why.
     "playpause": (0x0ccd00, "Play/Pause"),
     "previoussong": (0x0cb500, "Scan Next Track"),
     "nextsong": (0x0cb600, "Scan Previous Track"),
@@ -230,4 +237,16 @@ USAGE = {
     "volumedown": (0x0cea00, "Volume Decrement"),
     #
     "calc": (0x0c9201, "AL Calculator"),
+    #
+    # Not sure where these are on the HID spec.
+    "btn_left": (0x010100000000, "left click"),
+    "btn_right": (0x010200000000, "right click"),
+    "btn_middle": (0x010400000000, "scroll click"),
+    "btn_extra": (0x010800000000, "mouse button 4"),  # these may be swapped
+    "btn_side": (0x011000000000, "mouse button 5"),  # these may be swapped
+    # "": (0x018000000000, "double click")
+    # "": (0x010000000200, "scroll up")
+    # "": (0x01000000fe00, "scroll down")
+    # "": (0x0100000000fe, "scroll left")
+    # "": (0x010000000002, "scroll right")
 }
