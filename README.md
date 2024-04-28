@@ -152,6 +152,13 @@ You can delete a profile to clear all of the mappings at once:
 
 [hid-usage-codes]: https://www.usb.org/sites/default/files/hut1_5.pdf
 
+
+Disclaimer
+----------
+
+Please note that the keyboard's firmware and configuration protocol are proprietary and undocumented. I have tried my best to understand the protocol and ensure correct configuration commands are issued. However, I cannot guarantee correct operation. I will not be responsible if you damage your keyboard. Use this software at your own risk.
+
+
 Improvements
 ------------
 
