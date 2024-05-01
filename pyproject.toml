@@ -13,6 +13,15 @@ authors = [
 ]
 description = "Key mapper for 8BitDo's Retro Mechanical Keyboard"
 readme = "README.md"
+license = {text = "GNU General Public License v3 (GPLv3)"}  # to display in `pip show`
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Topic :: System :: Hardware :: Universal Serial Bus (USB) :: Human Interface Device (HID)"
+]
+
+[project.urls]
+Homepage = "https://github.com/goncalor/8bitdo-kbd-mapper/"
+Repository = "https://github.com/goncalor/8bitdo-kbd-mapper.git"
 
 [project.scripts]
 8bdkbd = "eightbdkbd.cli:main"
