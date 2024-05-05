@@ -155,7 +155,7 @@ USAGE = {
     "equal": (0x07002e, "Keyboard = and +"),
     "leftbrace": (0x07002f, "Keyboard [ and {"),
     "rightbrace": (0x070030, "Keyboard ] and }"),
-    "backslash": (0x070031, "Keyboard \ and |"),
+    "backslash": (0x070031, "Keyboard \\ and |"),
     "hashtilde": (0x070032, "Keyboard Non-US # and ~"),
     "semicolon": (0x070033, "Keyboard ; and :"),
     "apostrophe": (0x070034, "Keyboard ' and \""),
@@ -212,7 +212,7 @@ USAGE = {
     "kp0": (0x070062, "Keypad 0 and Insert"),
     "kpdot": (0x070063, "Keypad . and Delete"),
     #
-    "102nd": (0x070064, "Keyboard Non-US \ and |"),
+    "102nd": (0x070064, "Keyboard Non-US \\ and |"),
     "compose": (0x070065, "Keyboard Application"),
     "supera": (0x070065, "Keyboard Application"),  # alias for compose
     "menu": (0x070065, "Keyboard Application"),  # alias for compose
