@@ -1,7 +1,9 @@
-# allow logged in users to read/write the device
+# Place in /etc/udev/rules.d/
+
+# Allow logged in users to read/write the device
 SUBSYSTEM=="usb", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="5200", MODE="0660", TAG+="uaccess"
 
-# unbind usbhid from interface #2 so that python can use the interface
+# Unbind usbhid from interface #2 so that python can use the interface
 ACTION=="bind", SUBSYSTEM=="usb", ATTR{bInterfaceNumber}=="02", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="5200", RUN+="/usr/bin/sh -c 'echo $kernel > /sys/bus/usb/drivers/usbhid/unbind'"
 
 # If you want to hack these rules using `udevadm info -a` will be useful. Example:

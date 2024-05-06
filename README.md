@@ -22,7 +22,14 @@ Installation
 
 Clone the repository, `cd` into it and run
 
-    sudo pip install .
+    pip install .
+
+Copy `50-8bitdo-kdb.rules` to `/etc/udev/rules.d/`:
+
+    sudo cp 50-8bitdo-kdb.rules /etc/udev/rules.d/
+    sudo chmod 644 /etc/udev/rules.d/50-8bitdo-kdb.rules
+
+These `udev` rules are meant to ensure that `8bdkbd` will be able to bind and use the USB interface used to configure the keyboard, without needing to be installed and ran as root.
 
 
 How to use it
@@ -49,8 +56,7 @@ If you run `8bdkbd` without any other arguments it will print available options:
 ### Prerequisites
 
 - You need to connect your 8BitDo keyboard to your computer through USB and ensure its power switch is set to "off" (otherwise it does not communicate over USB)
-- `8bdkbd` must be run with `sudo` because the kernel's `hidraw` driver will normally bind the USB interface we need to connect to. `8bdkbd` needs privileges to unbind the interface from `hidraw`
-  - I don't like this but I have no better solution at the moment. If you know of a better way to do this (possibly some `udev` rules?) please open an issue and let me know
+- Install the `udev` rule in the Installation step, or you'll have to run `8bdkbd` as root
 
 
 ### Checking the status
@@ -66,10 +72,10 @@ Status can be checked with `8bdkbd status`. With no profile created it should ou
 
 To create a profile called "awesome":
 
-    # 8bdkbd profile create awesome
+    $ 8bdkbd profile create awesome
     Successfully created profile
 
-    # 8bdkbd status
+    $ 8bdkbd status
     8BitDo connected: yes
         Profile name: awesome
          Mapped keys:
@@ -81,15 +87,15 @@ To create a profile called "awesome":
 
 Keys can be mapped through their names.
 
-    # 8bdkbd map capslock esc
+    $ 8bdkbd map capslock esc
 
 Or they can be mapped through [HID usage codes][hid-usage-codes] if you can't find the key you want.
 
-    # 8bdkbd map-hid capslock 070029
+    $ 8bdkbd map-hid capslock 070029
 
 The result in both cases, starting with an empty map would be:
 
-    # 8bdkbd status
+    $ 8bdkbd status
     8BitDo connected: yes
         Profile name: awesome
          Mapped keys: capslock
@@ -127,24 +133,24 @@ Okay, but "how do I know the names for the keys?" You can use `list-keys`:
 
 Just map it back to itself:
 
-    # 8bdkbd map esc esc
+    $ 8bdkbd map esc esc
 
 
 ### Making a key not work
 
 Map it to "none":
 
-    # 8bdkbd map capslock none
+    $ 8bdkbd map capslock none
 
 
 ### Deleting a profile
 
 You can delete a profile to clear all of the mappings at once:
 
-    # 8bdkbd profile delete
+    $ 8bdkbd profile delete
     Successfully deleted profile
 
-    # 8bdkbd status
+    $ 8bdkbd status
     8BitDo connected: yes
         Profile name: None
          Mapped keys:
@@ -162,6 +168,7 @@ Please note that the keyboard's firmware and configuration protocol are propriet
 Improvements
 ------------
 
+- [x] write udev rule to avoid running as root
 - [ ] add support for macros
 - [ ] add support for external Super Buttons
 
