@@ -217,16 +217,17 @@ USAGE = {
     "supera": (0x070065, "Keyboard Application"),  # alias for compose
     "menu": (0x070065, "Keyboard Application"),  # alias for compose
     #
-    "leftctrl": (0x0700e0, "Keyboard Left Control"),
-    "leftshift": (0x0700e1, "Keyboard Left Shift"),
-    "leftalt": (0x0700e2, "Keyboard Left Alt"),
-    "leftmeta": (0x0700e3, "Keyboard Left GUI"),
-    "windows": (0x0700e3, "Keyboard Left GUI"),  # alias for leftmeta
-    "rightctrl": (0x0700e4, "Keyboard Right Control"),
-    "rightshift": (0x0700e5, "Keyboard Right Shift"),
-    "rightalt": (0x0700e6, "Keyboard Right Alt"),
-    "rightmeta": (0x0700e7, "Keyboard Right GUI"),
-    "superb": (0x0700e7, "Keyboard Right GUI"),  # alias for rightmeta
+    # Lower two bytes here seem swapped from the HID spec, unsure why.
+    "leftctrl": (0x07e000, "Keyboard Left Control"),
+    "leftshift": (0x07e100, "Keyboard Left Shift"),
+    "leftalt": (0x07e200, "Keyboard Left Alt"),
+    "leftmeta": (0x07e300, "Keyboard Left GUI"),
+    "windows": (0x07e300, "Keyboard Left GUI"),  # alias for leftmeta
+    "rightctrl": (0x07e400, "Keyboard Right Control"),
+    "rightshift": (0x07e500, "Keyboard Right Shift"),
+    "rightalt": (0x07e600, "Keyboard Right Alt"),
+    "rightmeta": (0x07e700, "Keyboard Right GUI"),
+    "superb": (0x07e700, "Keyboard Right GUI"),  # alias for rightmeta
     #
     # Lower two bytes here seem swapped from the HID spec, unsure why.
     "playpause": (0x0ccd00, "Play/Pause"),
