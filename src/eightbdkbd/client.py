@@ -90,7 +90,7 @@ class EightBDKdb:
         self.write(MAPPING_GET + [keys.HWKEY[key]])
         r = self.read_check_start(MAPPING)
 
-        hid = r.rstrip(bytes([0]))[3:]
+        hid = r[3:6]
         hid_int = int.from_bytes(hid)
         for name, val in keys.USAGE.items():
             if val[0] == hid_int:
