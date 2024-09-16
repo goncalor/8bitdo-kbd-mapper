@@ -67,7 +67,7 @@ class EightBDKdb:
         keymap = bytes() + r[2:-1]  # last byte is a marker
         while r[-1] == 0x01:  # indicates there are more maps
             r = self.read_check_start(PROFILE_MAPPED)
-            keymap += r[2:]
+            keymap += r[2:-1]
 
         mapped_keys = []
         for i, kc in enumerate(keymap):
