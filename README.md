@@ -171,6 +171,7 @@ Improvements
 - [x] write udev rule to avoid running as root
 - [ ] add support for macros
 - [ ] add support for external Super Buttons
+  - for now, depending on the mappings you need, you may be able to configure them using the steps under "Fast Key Mapping" seen in [the manual](https://download.8bitdo.com/Manual/PC-Peripherals/retro-mechanical-keyboard.pdf)
 
 
 Why not Rust?
