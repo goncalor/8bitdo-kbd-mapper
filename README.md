@@ -29,8 +29,14 @@ Copy `50-8bitdo-kdb.rules` to `/etc/udev/rules.d/`:
     sudo cp 50-8bitdo-kdb.rules /etc/udev/rules.d/
     sudo chmod 644 /etc/udev/rules.d/50-8bitdo-kdb.rules
 
-These `udev` rules are meant to ensure that `8bdkbd` will be able to bind and use the USB interface used to configure the keyboard, without needing to be installed and ran as root.
+Or copy `50-8bitdo-108-key-kdb.rules` to `/etc/udev/rules.d/`:
 
+    sudo cp 50-8bitdo-108-key-kdb.rules /etc/udev/rules.d/
+    sudo chmod 644 /etc/udev/rules.d/50-8bitdo-108-key-kdb.rules
+
+(You may need to unplug and replug your keyboard for this to take effect)
+
+These `udev` rules are meant to ensure that `8bdkbd` will be able to bind and use the USB interface used to configure the keyboard, without needing to be installed and ran as root.
 
 How to use it
 -------------

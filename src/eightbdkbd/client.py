@@ -51,7 +51,8 @@ class EightBDKdb:
         if r.startswith(bytes(PROFILE_NAME)):
             # skip 4 bytes, exclude trailing null bytes
             return r.rstrip(bytes([0]))[4:].decode(encoding="utf-16-be")
-
+        if r.startswith(bytes(PROFILE_108_NAME)):
+            return r.rstrip(bytes([0]))[4:].decode(encoding="utf-16-be")
         raise ValueError(
             f"Read unexpected value\nExpected: {bytes(PROFILE_NONE).hex()} or\n          {bytes(PROFILE_NAME).hex()}\n    Read: {r.hex()}"
         )
