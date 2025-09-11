@@ -109,9 +109,13 @@ def cmd_map_hid(args):
 def cmd_status(args):
     # keyboard connected?
     print("8BitDo connected: ", end="")
-    if usb.core.find(idVendor=consts.VENDOR_ID, idProduct=consts.PRODUCT_ID):
-        print("yes")
-    else:
+    found = False
+    for id in consts.PRODUCT_IDS:
+        if usb.core.find(idVendor=consts.VENDOR_ID, idProduct=id):
+            print("yes")
+            found = True 
+            break
+    if not found:
         print("no")
         return
 
