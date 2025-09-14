@@ -82,6 +82,8 @@ To create a profile called "awesome":
 
 `create` can also be used to rename the current profile.
 
+Please note you need to create a profile so that the profile button (the heart shaped one) works.
+
 
 ### Mapping keys
 
@@ -157,6 +159,17 @@ You can delete a profile to clear all of the mappings at once:
 
 
 [hid-usage-codes]: https://www.usb.org/sites/default/files/hut1_5.pdf
+
+
+Troubleshooting
+---------------
+
+Check:
+1. Your keyboard is connected to your computer via USB
+1. The power switch is set to "off"
+1. `8bdkbd status` runs successfully and that it detects your keyboard, and lists your profile name and mapped keys
+  1. If the profile name is "None", ensure you create a profile with `8bdkbd profile create`
+1. You've pressed the profile button on the keyboard (the heart shaped one) after you configured the profile. It should have its LED on for the profile mappings to work
 
 
 Disclaimer
