@@ -168,7 +168,7 @@ Check:
 1. Your keyboard is connected to your computer via USB
 1. The power switch is set to "off"
 1. `8bdkbd status` runs successfully and that it detects your keyboard, and lists your profile name and mapped keys
-  1. If the profile name is "None", ensure you create a profile with `8bdkbd profile create`
+    1. If the profile name is "None", ensure you create a profile with `8bdkbd profile create`
 1. You've pressed the profile button on the keyboard (the heart shaped one) after you configured the profile. It should have its LED on for the profile mappings to work
 
 
