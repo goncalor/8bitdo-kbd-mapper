@@ -1,4 +1,5 @@
 import sys
+from eightbdkbd import consts
 import usb.core
 
 import keys
@@ -51,7 +52,8 @@ class EightBDKdb:
         if r.startswith(bytes(PROFILE_NAME)):
             # skip 4 bytes, exclude trailing null bytes
             return r.rstrip(bytes([0]))[4:].decode(encoding="utf-16-be")
-
+        if r.startswith(bytes(PROFILE_108_NAME)):
+            return r.rstrip(bytes([0]))[4:].decode(encoding="utf-16-be")
         raise ValueError(
             f"Read unexpected value\nExpected: {bytes(PROFILE_NONE).hex()} or\n          {bytes(PROFILE_NAME).hex()}\n    Read: {r.hex()}"
         )
@@ -114,12 +116,15 @@ class EightBDKdb:
 
 
 def get_8bd_endpoints():
-    dev = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+    dev = None
 
+    for pid in consts.PRODUCT_IDS:
+       dev = usb.core.find(idVendor=VENDOR_ID, idProduct=pid)
+       if dev is not None:
+           break
+    
     if dev is None:
-        raise ValueError(
-            "Could not find 8BitDo Retro Mechanical Keyboard. Is its cable connected?"
-        )
+        raise ValueError("Could not find 8BitDo Retro Mechanical Keyboard. Is its cable connected?")
 
     # detach interface #2 if needed
     if dev.is_kernel_driver_active(2):
