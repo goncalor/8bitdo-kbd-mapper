@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=80", "setuptools-scm[simple]>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "8bdkbd"
-version = "0.2"
+dynamic = ["version"]
 dependencies = [
     "pyusb"
 ]
@@ -25,3 +25,8 @@ Repository = "https://github.com/goncalor/8bitdo-kbd-mapper.git"
 
 [project.scripts]
 8bdkbd = "eightbdkbd.cli:main"
+
+[tool.setuptools_scm]
+version_scheme = "no-guess-dev"
+#local_scheme = "dirty-tag"  # no-local-version
+fallback_version = "0.0.0"
