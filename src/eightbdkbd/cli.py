@@ -109,15 +109,20 @@ def cmd_map_hid(args):
 def cmd_status(args):
     # keyboard connected?
     print("8BitDo connected: ", end="")
+    # TODO: deduplicate this and same loop in EightBDKdb.get_8bd_endpoints() ?
     found = False
     for id in consts.PRODUCT_IDS:
         if usb.core.find(idVendor=consts.VENDOR_ID, idProduct=id):
-            print("yes")
-            found = True 
+            found = True
             break
-    if not found:
+
+    if found:
+        print("yes")
+    else:
         print("no")
         return
+
+    # TODO: print hardware version (Retro Mechanical vs Retro 108 Mechanical)
 
     # profile name
     kbd = EightBDKdb()
