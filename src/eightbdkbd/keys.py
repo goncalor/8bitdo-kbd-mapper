@@ -178,6 +178,21 @@ USAGE = {
     "f11": (0x070044, "Keyboard F11"),
     "f12": (0x070045, "Keyboard F12"),
     #
+    # These do not match the HID spec.
+    # Thank you @andrew867 for the pcap.
+    "f13": (0x070076, "Keyboard F13"),
+    "f14": (0x070077, "Keyboard F14"),
+    "f15": (0x070078, "Keyboard F15"),
+    "f16": (0x070079, "Keyboard F16"),
+    "f17": (0x07007a, "Keyboard F17"),
+    "f18": (0x07007b, "Keyboard F18"),
+    "f19": (0x07007c, "Keyboard F19"),
+    "f20": (0x07007d, "Keyboard F20"),
+    "f21": (0x07007e, "Keyboard F21"),
+    "f22": (0x07007f, "Keyboard F22"),
+    "f23": (0x070080, "Keyboard F23"),
+    "f24": (0x070081, "Keyboard F24"),
+    #
     "sysrq": (0x070046, "Keyboard PrintScreen"),
     "prtsc": (0x070046, "Keyboard PrintScreen"),  # alias for sysrq
     "scrolllock": (0x070047, "Keyboard Scroll Lock"),
