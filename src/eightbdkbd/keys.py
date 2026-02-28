@@ -231,8 +231,8 @@ USAGE = {
     #
     # Lower two bytes here seem swapped from the HID spec, unsure why.
     "playpause": (0x0ccd00, "Play/Pause"),
-    "previoussong": (0x0cb500, "Scan Next Track"),
-    "nextsong": (0x0cb600, "Scan Previous Track"),
+    "nextsong": (0x0cb500, "Scan Next Track"),
+    "previoussong": (0x0cb600, "Scan Previous Track"),
     "mute": (0x0ce200, "Mute"),
     "volumeup": (0x0ce900, "Volume Increment"),
     "volumedown": (0x0cea00, "Volume Decrement"),
